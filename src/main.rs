@@ -12,7 +12,7 @@ mod teapot;
 fn main() {
     use glium::glutin;
     // 1. The **winit::EventsLoop** for handling events.
-    let mut events_loop = glium::glutin::event_loop::EventLoop::new();
+    let events_loop = glium::glutin::event_loop::EventLoop::new();
     // 2. Parameters for building the Window.
     let wb = glium::glutin::window::WindowBuilder::new()
         .with_inner_size(glium::glutin::dpi::LogicalSize::new(1024.0, 768.0))
