@@ -18,7 +18,7 @@ fn main() {
         .with_inner_size(glium::glutin::dpi::LogicalSize::new(1024.0, 768.0))
         .with_title("Hello world");
     // 3. Parameters for building the OpenGL context.
-    let cb = glium::glutin::ContextBuilder::new();
+    let cb = glium::glutin::ContextBuilder::new().with_depth_buffer(24);
     // 4. Build the Display with the given window and OpenGL context parameters and register the
     //    window with the events_loop.
     let display = glium::Display::new(wb, cb, &events_loop).unwrap();
@@ -77,7 +77,7 @@ fn main() {
         }
 
         let mut target = display.draw();
-        target.clear_color(0.0, 0.0, 1.0, 1.0);
+        target.clear_color_and_depth((0.0, 0.0, 1.0, 1.0), 1.0);
 
         let matrix = [
             [0.01, 0.0, 0.0, 0.0],
@@ -88,13 +88,22 @@ fn main() {
 
         let light = [-1.0, 0.4, 0.9f32];
 
+        let params = glium::DrawParameters {
+            depth: glium::Depth {
+                test: glium::draw_parameters::DepthTest::IfLess,
+                write: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+
         target
             .draw(
                 (&positions, &normals),
                 &indices,
                 &program,
                 &uniform! { matrix: matrix, u_light: light },
-                &Default::default(),
+                &params,
             )
             .unwrap();
         target.finish().unwrap();
